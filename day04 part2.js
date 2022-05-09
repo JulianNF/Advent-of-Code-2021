@@ -1681,24 +1681,24 @@ function boardHasBingo(board) {
 	return false;
 }
 
-function getFirstWinningNumberAndBoard(numbers, boards) {
-	let firstWinningNumber;
-	let firstWinningBoard;
+function getLastWinningNumberAndBoard(numbers, boards) {
+	let winningNumbers = [];
+	let winningBoards = [];
 
 	for (let number of numbers) {
 		for (let board of boards) {
-			markBingoBoard(number, board);
-			if (boardHasBingo(board)) {
-				firstWinningNumber = number;
-				firstWinningBoard = board;
-				break;
+			if (winningBoards.indexOf(board) < 0) {
+				markBingoBoard(number, board);
+				if (boardHasBingo(board)) {
+					winningNumbers.push(number);
+					winningBoards.push(board);
+				}
 			}
 		}
-		if (firstWinningBoard) break;
 	}
 	return {
-		firstWinningNumber: firstWinningNumber,
-		firstWinningBoard: firstWinningBoard,
+		lastWinningNumber: winningNumbers[winningNumbers.length - 1],
+		lastWinningBoard: winningBoards[winningBoards.length - 1],
 	};
 }
 
@@ -1714,12 +1714,12 @@ function getBingoBoardScore(winningNumber, board) {
 	return winningNumber * sumOfUnmarkedNumbers;
 }
 
-// let winner = getFirstWinningNumberAndBoard(testNumbersToDraw, testBingoBoards);
-let winner = getFirstWinningNumberAndBoard(numbersToDraw, bingoBoards);
+// let lastWinner = getLastWinningNumberAndBoard(testNumbersToDraw, testBingoBoards);
+let lastWinner = getLastWinningNumberAndBoard(numbersToDraw, bingoBoards);
 
-console.log("winning number:", winner.firstWinningNumber);
-console.log("winning board:", winner.firstWinningBoard);
-console.log("score: ", getBingoBoardScore(winner.firstWinningNumber, winner.firstWinningBoard));
+console.log("last winning number:", lastWinner.lastWinningNumber);
+console.log("last winning board:", lastWinner.lastWinningBoard);
+console.log("score: ", getBingoBoardScore(lastWinner.lastWinningNumber, lastWinner.lastWinningBoard));
 
 // for (let i = 0; i < 10000; i++) {
 // 	followInstructions(instructions);
