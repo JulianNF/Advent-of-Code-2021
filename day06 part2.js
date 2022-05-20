@@ -54,5 +54,14 @@ let finalFishCountByAge = updateFishCountByAgeAfterXDays(fishCountByAge, 256);
 console.log("final fish ages:", finalFishCountByAge);
 console.log("fishCount:", countFishInSchool(finalFishCountByAge));
 
-console.log("\ntotal ms, average for 10000 runs: ", (performance.now() - startMS) / 10000);
+console.log("\ntotal ms, one run: ", performance.now() - startMS);
+
+
+// for (let i = 0; i < 10000; i++) {
+  // let fishCountByAge = groupFishInSchoolByAge(fish);
+  // let finalFishCountByAge = updateFishCountByAgeAfterXDays(fishCountByAge, 256);
+  // console.log("fishCount:", countFishInSchool(finalFishCountByAge));
+// }
+// console.log("\ntotal ms, average for 10000 runs: ", (performance.now() - startMS) / 10000);
+
 console.log("==============================\n");

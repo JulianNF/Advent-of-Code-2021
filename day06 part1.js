@@ -1,4 +1,4 @@
-// const startMS = performance.now();
+const startMS = performance.now();
 
 const testFish = [3, 4, 3, 1, 2];
 
@@ -57,14 +57,17 @@ function countFishInSchool(schoolOfFish) {
 }
 
 
+// let finalSchoolOfFish = updateFishPopulationByXDays(testFish, 80);
 let finalSchoolOfFish = updateFishPopulationByXDays(fish, 80);
 console.log("final school:", finalSchoolOfFish);
 console.log("fishCount:", countFishInSchool(finalSchoolOfFish));
+console.log("\ntotal ms, one run: ", performance.now() - startMS);
 
 // for (let i = 0; i < 10000; i++) {
-// 	followInstructions(instructions);
-// 	resetOrigin();
+//   let finalSchoolOfFish = updateFishPopulationByXDays(fish, 80);
+//   console.log("fishCount:", countFishInSchool(finalSchoolOfFish));
 // }
 // console.log("\ntotal ms, average for 10000 runs: ", (performance.now() - startMS) / 10000);
+
 
 console.log("==============================\n");
