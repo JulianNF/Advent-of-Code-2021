@@ -1,0 +1,27 @@
+{
+    "name": "advent-of-code-2021",
+    "version": "1.0.0",
+    "description": "Working on Advent of Code 2021 challenges",
+    "main": "index.js",
+    "scripts": {
+        "ts-watch": "tsc -w -p",
+        "run": "node index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/JulianNF/Advent-of-Code-2021.git"
+    },
+    "author": "Julian NF",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/JulianNF/Advent-of-Code-2021/issues"
+    },
+    "homepage": "https://github.com/JulianNF/Advent-of-Code-2021#readme",
+    "dependencies": {
+        "typescript": "^4.7.4"
+    },
+    "devDependencies": {
+        "@types/node": "^18.0.0"
+    }
+}
