@@ -20,7 +20,7 @@ console.log('\ntotal ms, 1 run: ', performance.now() - startMS);
 // console.log('\ntotal ms, average for 10000 runs: ', (performance.now() - startMS) / 10000);
 // -------
 function convertRawInputTextToDepthMap(fileName) {
-    const rawText = (0, fs_1.readFileSync)(fileName, 'utf-8');
+    const rawText = fs_1.readFileSync(fileName, 'utf-8');
     const textRows = rawText.replace(/\r\n/g, '\n').split('\n'); // Regex to account for possbility of IDE being set to CRLF instead of LF end of lines
     let depthMap = [];
     for (let row of textRows) {
@@ -92,8 +92,8 @@ function isPointInPointArray(point, pointArray) {
 }
 function getPointsInBasin(lowPoint, map) {
     let pointsInBasin = [lowPoint];
-    let pointsToTest = [];
-    getAdjacentPoints(lowPoint, map).forEach((adjacentPoint) => pointsToTest.push(adjacentPoint));
+    let pointsToTest = [...getAdjacentPoints(lowPoint, map)];
+    // getAdjacentPoints(lowPoint, map).forEach((adjacentPoint) => pointsToTest.push(adjacentPoint));
     while (pointsToTest.length > 0) {
         let newPointsToTest = [];
         for (let i = pointsToTest.length - 1; i >= 0; i--) {
