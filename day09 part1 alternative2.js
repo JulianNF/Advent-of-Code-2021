@@ -15,19 +15,20 @@ console.log('\ntotal ms, 1 run: ', performance.now() - startMS);
 // console.log('\ntotal ms, average for 10000 runs: ', (performance.now() - startMS) / 10000);
 // -------
 function convertRawInputTextToDepthMap(fileName) {
-    const rawText = (0, fs_1.readFileSync)(fileName, 'utf-8');
-    const textRows = rawText.split('\n');
+    const rawText = fs_1.readFileSync(fileName, 'utf-8');
+    const textRows = rawText.replace(/\r\n/g, '\n').split('\n'); // Regex to account for IDE being set to CRLF instead of LF end of lines
     // NB: With this approach, code runs in ~37ms/run, ~0.741 average/10000 runs:
     let depthMap = [];
     for (let row of textRows) {
         depthMap.push(row.split('').map((character) => parseInt(character, 10)));
     }
     // NB: With this approach, code runs in ~44ms/run, ~0.782 average/10000 runs:
+    // let depthMap: number[][] = [];
     // for (let i = 0; i < textRows.length; i++) {
-    //     depthMap[i] = [];
-    //     for (let j = 0; j < textRows[i].length; j++) {
-    //         depthMap[i][j] = parseInt(textRows[i].charAt(j), 10);
-    //     }
+    // 	depthMap[i] = [];
+    // 	for (let j = 0; j < textRows[i].length; j++) {
+    // 		depthMap[i][j] = parseInt(textRows[i].charAt(j), 10);
+    // 	}
     // }
     return depthMap;
 }
@@ -66,8 +67,8 @@ function calculateTotalRiskLevel() {
     for (let y = 0; y < depthMap.length; y++) {
         for (let x = 0; x < depthMap[y].length; x++) {
             if (isLowPoint({ x: x, y: y })) {
-                const value = depthMap[y][x];
-                totalRiskLevel += value + 1;
+                let riskLevel = depthMap[y][x] + 1;
+                totalRiskLevel += riskLevel;
             }
         }
     }
