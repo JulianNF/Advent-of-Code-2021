@@ -4,8 +4,8 @@ const startMS = performance.now();
 import { readFileSync } from 'fs';
 
 interface Point {
-	x: number;
-	y: number;
+    x: number;
+    y: number;
 }
 
 // -------
@@ -24,65 +24,65 @@ console.log('\ntotal ms, 1 run: ', performance.now() - startMS);
 // -------
 
 function convertRawInputTextToDepthMap(fileName: string): number[][] {
-	const rawText = readFileSync(fileName, 'utf-8');
-	const textRows = rawText.replace(/\r\n/g, '\n').split('\n'); // Regex to account for IDE being set to CRLF instead of LF end of lines
+    const rawText = readFileSync(fileName, 'utf-8');
+    const textRows = rawText.replace(/\r\n/g, '\n').split('\n'); // Regex to account for possbility of IDE being set to CRLF instead of LF end of lines
 
-	// NB: With this approach, code runs in ~37ms/run, ~0.741 average/10000 runs:
-	let depthMap: number[][] = [];
-	for (let row of textRows) {
-		depthMap.push(row.split('').map((character) => parseInt(character, 10)));
-	}
+    // NB: With this approach, code runs in ~37ms/run, ~0.741 average/10000 runs:
+    let depthMap: number[][] = [];
+    for (let row of textRows) {
+        depthMap.push(row.split('').map((character) => parseInt(character, 10)));
+    }
 
-	// NB: With this approach, code runs in ~44ms/run, ~0.782 average/10000 runs:
-	// let depthMap: number[][] = [];
-	// for (let i = 0; i < textRows.length; i++) {
-	// 	depthMap[i] = [];
-	// 	for (let j = 0; j < textRows[i].length; j++) {
-	// 		depthMap[i][j] = parseInt(textRows[i].charAt(j), 10);
-	// 	}
-	// }
+    // NB: With this approach, code runs in ~44ms/run, ~0.782 average/10000 runs:
+    // let depthMap: number[][] = [];
+    // for (let i = 0; i < textRows.length; i++) {
+    // 	depthMap[i] = [];
+    // 	for (let j = 0; j < textRows[i].length; j++) {
+    // 		depthMap[i][j] = parseInt(textRows[i].charAt(j), 10);
+    // 	}
+    // }
 
-	return depthMap;
+    return depthMap;
 }
 
 function isLowPoint(point: Point): boolean {
-	const value = depthMap[point.y][point.x];
+    const value = depthMap[point.y][point.x];
 
-	if (value == 0) return true;
-	if (value == 9) return false;
+    if (value == 0) return true;
+    if (value == 9) return false;
 
-	let valueLeft = 9;
-	if (point.x > 0) valueLeft = depthMap[point.y][point.x - 1];
-	if (value >= valueLeft) return false;
+    let valueLeft = 9;
+    if (point.x > 0) valueLeft = depthMap[point.y][point.x - 1];
+    if (value >= valueLeft) return false;
 
-	let valueRight = 9;
-	const maxX = depthMap[0].length - 1;
-	if (point.x < maxX) valueRight = depthMap[point.y][point.x + 1];
-	if (value >= valueRight) return false;
+    let valueRight = 9;
+    const maxX = depthMap[0].length - 1;
+    if (point.x < maxX) valueRight = depthMap[point.y][point.x + 1];
+    if (value >= valueRight) return false;
 
-	let valueUp = 9;
-	if (point.y > 0) valueUp = depthMap[point.y - 1][point.x];
-	if (value >= valueUp) return false;
+    let valueUp = 9;
+    if (point.y > 0) valueUp = depthMap[point.y - 1][point.x];
+    if (value >= valueUp) return false;
 
-	let valueDown = 9;
-	const maxY = depthMap.length - 1;
-	if (point.y < maxY) valueDown = depthMap[point.y + 1][point.x];
-	if (value >= valueDown) return false;
+    let valueDown = 9;
+    const maxY = depthMap.length - 1;
+    if (point.y < maxY) valueDown = depthMap[point.y + 1][point.x];
+    if (value >= valueDown) return false;
 
-	return true;
+    return true;
 }
 
 function calculateTotalRiskLevel(): number {
-	let totalRiskLevel: number = 0;
-	for (let y = 0; y < depthMap.length; y++) {
-		for (let x = 0; x < depthMap[y].length; x++) {
-			if (isLowPoint({ x: x, y: y })) {
-				let riskLevel = depthMap[y][x] + 1;
-				totalRiskLevel += riskLevel;
-			}
-		}
-	}
-	return totalRiskLevel;
+    let totalRiskLevel: number = 0;
+    for (let y = 0; y < depthMap.length; y++) {
+        for (let x = 0; x < depthMap[y].length; x++) {
+            if (isLowPoint({ x: x, y: y })) {
+                let riskLevel = depthMap[y][x] + 1;
+                totalRiskLevel += riskLevel;
+            }
+        }
+    }
+    return totalRiskLevel;
 }
 
 console.log('==============================\n');

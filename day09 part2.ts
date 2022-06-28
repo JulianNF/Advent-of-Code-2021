@@ -31,12 +31,13 @@ console.log('\ntotal ms, 1 run: ', performance.now() - startMS);
 
 function convertRawInputTextToDepthMap(fileName: string): number[][] {
     const rawText = readFileSync(fileName, 'utf-8');
-    const textRows = rawText.split('\n');
+    const textRows = rawText.replace(/\r\n/g, '\n').split('\n'); // Regex to account for possbility of IDE being set to CRLF instead of LF end of lines
 
     let depthMap: number[][] = [];
     for (let row of textRows) {
         depthMap.push(row.split('').map((character) => parseInt(character, 10)));
     }
+
     return depthMap;
 }
 
