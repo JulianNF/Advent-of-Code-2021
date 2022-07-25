@@ -4,10 +4,10 @@ const startMS = performance.now();
 import { readFileSync } from 'fs';
 
 // ------
-const lines = convertRawInputTextToLineArrays('day10 input.txt');
+const lines = convertRawInputTextToLineArrays('day10/day10 input.txt');
 console.log(getTotalSyntaxErrorPoints(lines));
 
-// const lines = convertRawInputTextToLineArrays('day10 input.txt');
+// const lines = convertRawInputTextToLineArrays('day10/day10 input.txt');
 // for (let i = 0; i < 10000; i++) {
 //     getTotalSyntaxErrorPoints(lines);
 // }

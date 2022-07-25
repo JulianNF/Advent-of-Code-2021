@@ -71,7 +71,7 @@ function getTotalRiskLevel(map) {
     }
     return totalRiskLevel;
 }
-const depthMap = convertRawInputTextToDepthMap('day09 input.txt');
+const depthMap = convertRawInputTextToDepthMap('day09/day09 input.txt');
 const totalRisk = getTotalRiskLevel(depthMap);
 console.log('total risk:', totalRisk);
 console.log('\ntotal ms, 1 run: ', performance.now() - startMS);

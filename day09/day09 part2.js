@@ -4,14 +4,14 @@ const startMS = performance.now();
 // ------------------------------------------------------------ //
 const fs_1 = require("fs");
 // -------
-const depthMap = convertRawInputTextToDepthMap('day09 input.txt');
+const depthMap = convertRawInputTextToDepthMap('day09/day09 input.txt');
 const lowPoints = findLowPointsInMap(depthMap);
 const sizesOfThreeLargestBasins = findThreeLargestBasins(lowPoints, depthMap);
 console.log('sizes of three largest basins:', sizesOfThreeLargestBasins);
 const multipleOf3LargestBasins = sizesOfThreeLargestBasins[0] * sizesOfThreeLargestBasins[1] * sizesOfThreeLargestBasins[2];
 console.log('multipleOf3LargestBasins:', multipleOf3LargestBasins);
 console.log('\ntotal ms, 1 run: ', performance.now() - startMS);
-// const depthMap = convertRawInputTextToDepthMap('day09 input.txt');
+// const depthMap = convertRawInputTextToDepthMap('day09/day09 input.txt');
 // for (let i = 0; i < 10000; i++) {
 //     let lowPoints = findLowPointsInMap(depthMap);
 //     let sizesOfThreeLargestBasins = findThreeLargestBasins(lowPoints, depthMap);
