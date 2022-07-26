@@ -15,47 +15,48 @@ console.log(getTotalSyntaxErrorPoints(lines));
 // ------
 
 function convertRawInputTextToLineArrays(fileName: string): string[][] {
-    const rawText = readFileSync(fileName, 'utf-8');
-    const textRows = rawText.replace(/\r\n/, '\n').split('\n'); // Regex to account for possbility of IDE being set to CRLF instead of LF end of lines
+	const rawText = readFileSync(fileName, 'utf-8');
+	const textRows = rawText.replace(/\r\n/, '\n').split('\n'); // Regex to account for possbility of IDE being set to CRLF instead of LF end of lines
 
-    // NB: With this approach, code runs in ~37ms/run, ~0.741 average/10000 runs:
-    let lineArray: string[][] = [];
-    for (let row of textRows) {
-        lineArray.push(row.split(''));
-    }
+	// NB: With this approach, code runs in ~37ms/run, ~0.741 average/10000 runs:
+	let lineArray: string[][] = [];
+	for (let row of textRows) {
+		lineArray.push(row.split(''));
+	}
 
-    return lineArray;
+	return lineArray;
 }
 
 function getSyntaxErrorPointsForLine(line: string[]): number {
-    const openings = ['(', '[', '{', '<'];
-    const closings = [')', ']', '}', '>'];
-    const points = [3, 57, 1197, 25137];
+	// Feedback: note that creating these three static variable arrays in the function means that they get created each time the function is called. Better to define them in global scope and use them that way
+	const openings = ['(', '[', '{', '<'];
+	const closings = [')', ']', '}', '>'];
+	const points = [3, 57, 1197, 25137];
 
-    let recordedOpeningChars: string[] = [];
-    for (let char of line) {
-        let isOpeningChar = openings.includes(char);
-        if (isOpeningChar) {
-            recordedOpeningChars.push(char);
-        } else {
-            let charIndex = closings.indexOf(char);
-            let matchingOpeningChar = openings[charIndex];
-            let nextOpeningCharToClose = recordedOpeningChars.pop();
-            if (nextOpeningCharToClose != matchingOpeningChar) {
-                return points[charIndex];
-            }
-        }
-    }
-    return 0;
+	let recordedOpeningChars: string[] = [];
+	for (let char of line) {
+		let isOpeningChar = openings.includes(char);
+		if (isOpeningChar) {
+			recordedOpeningChars.push(char);
+		} else {
+			let charIndex = closings.indexOf(char);
+			let matchingOpeningChar = openings[charIndex];
+			let nextOpeningCharToClose = recordedOpeningChars.pop();
+			if (nextOpeningCharToClose != matchingOpeningChar) {
+				return points[charIndex];
+			}
+		}
+	}
+	return 0;
 }
 
 function getTotalSyntaxErrorPoints(lines: string[][]): number {
-    let points: number = 0;
-    for (let line of lines) {
-        points += getSyntaxErrorPointsForLine(line);
-    }
+	let points: number = 0;
+	for (let line of lines) {
+		points += getSyntaxErrorPointsForLine(line);
+	}
 
-    return points;
+	return points;
 }
 
 console.log('==============================\n');
