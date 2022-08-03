@@ -5,7 +5,7 @@ const startMS = performance.now();
 const fs_1 = require("fs");
 // ------------------------------------------------------------ //
 const octoGrid = convertRawInputTextToLineArrays('day11/day11 input.txt');
-console.log('total flashes:', countFlashesAfterXSteps(100, octoGrid));
+console.log('first synchronization at:', findFirstStepWhenAllOctopiAreSynchronized(octoGrid));
 console.log('\ntotal ms: ', performance.now() - startMS);
 function convertRawInputTextToLineArrays(fileName) {
     const rawText = fs_1.readFileSync(fileName, 'utf-8');
@@ -62,17 +62,6 @@ function increaseValueOfAdjacentOctopi(point, octopusGrid) {
         octopusGrid[adjacentPoint.y][adjacentPoint.x] += 1;
     }
 }
-function countFlashedOctopi(octopusGrid) {
-    let flashedOctopi = 0;
-    for (let y = 0; y < octopusGrid.length; y++) {
-        for (let x = 0; x < octopusGrid[y].length; x++) {
-            if (octopusGrid[y][x] > 9) {
-                flashedOctopi += 1;
-            }
-        }
-    }
-    return flashedOctopi;
-}
 function atLeastOneOctopusNeedsToFlash(octopusGrid) {
     for (let y = 0; y < octopusGrid.length; y++) {
         for (let x = 0; x < octopusGrid[y].length; x++) {
@@ -82,6 +71,17 @@ function atLeastOneOctopusNeedsToFlash(octopusGrid) {
         }
     }
     return false;
+}
+function allOctopiFlashed(octopusGrid) {
+    for (let y = 0; y < octopusGrid.length; y++) {
+        for (let x = 0; x < octopusGrid[y].length; x++) {
+            let value = getValueAtPointInGrid({ x: x, y: y }, octopusGrid);
+            if (value < 9) {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 function resetFlashedOctopiEnergyLevels(octopusGrid) {
     for (let y = 0; y < octopusGrid.length; y++) {
@@ -109,13 +109,17 @@ function stepOctopusEnergyLevelsOnce(octopusGrid) {
         cascadeOctopusFlashesOnce(octopusGrid);
     }
 }
-function countFlashesAfterXSteps(stepCount, octopusGrid) {
-    let flashCount = 0;
-    for (let i = 0; i < stepCount; i++) {
+// Small improvement in this alternative, where a separate function was created to make code cleaner to read. It also returns early, instead of looping through the whole array. It makes for small performance improvement (~14% improvement):
+function findFirstStepWhenAllOctopiAreSynchronized(octopusGrid) {
+    let stepCounter = 0;
+    while (true) {
         stepOctopusEnergyLevelsOnce(octopusGrid);
-        flashCount += countFlashedOctopi(octopusGrid);
+        stepCounter += 1;
+        if (allOctopiFlashed(octopusGrid)) {
+            break;
+        }
         resetFlashedOctopiEnergyLevels(octopusGrid);
     }
-    return flashCount;
+    return stepCounter;
 }
 console.log('==============================\n');
