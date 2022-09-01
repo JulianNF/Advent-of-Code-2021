@@ -12,15 +12,11 @@ let paths = findAllPathsThroughCaves();
 console.log('total paths:', paths.length);
 console.log('\ntotal ms: ', performance.now() - startMS);
 function convertRawInputTextToArrayOfCaves(fileName) {
-    const rawText = fs_1.readFileSync(fileName, 'utf-8');
+    const rawText = (0, fs_1.readFileSync)(fileName, 'utf-8');
     const textRows = rawText.replace(/\r\n/g, '\n').split('\n'); // Regex to account for possbility of IDE being set to CRLF instead of LF end of lines
     let caves = [];
     for (let row of textRows) {
         let [nameOfFirstCave, nameOfSecondCave] = row.split('-');
-        // let caveNames = row.split('-');
-        // let nameOfFirstCave = caveNames[0];
-        // let nameOfSecondCave = caveNames[1];
-        // TODO - Refactor this "cave init" into a function, and call it twice, inverting the order of the two caves on the second call
         let firstCaveAlreadyRecorded = caves.find((cave) => cave.name == nameOfFirstCave);
         if (!firstCaveAlreadyRecorded) {
             let newCave = {
@@ -48,9 +44,6 @@ function convertRawInputTextToArrayOfCaves(fileName) {
     }
     return caves;
 }
-// function isBigCave(caveName: string): boolean {
-//     return caveName.toUpperCase() == caveName;
-// }
 function isSmallCave(caveName) {
     return caveName.toUpperCase() != caveName;
 }
