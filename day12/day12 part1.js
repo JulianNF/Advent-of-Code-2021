@@ -4,22 +4,16 @@ const startMS = performance.now();
 // ------------------------------------------------------------ //
 const fs_1 = require("fs");
 // ------------------------------------------------------------ //
-// let caves = convertRawInputTextToCaveNodeObject('day12/day12 input.txt');
-// console.log('mapNodes:', caves);
-// removeDeadendCavesAndConnectionsToThem(caves);
-// console.log('useful caves:', caves);
-// let paths = findAllPathsThroughCaves();
-// console.log('total paths:', paths.length - 1);
-// console.log('\ntotal ms: ', performance.now() - startMS);
 let caves = convertRawInputTextToCaveNodeObject('day12/day12 input.txt');
-for (let i = 0; i < 10000; i++) {
-    removeDeadendCavesAndConnectionsToThem(caves);
-    let paths = findAllPathsThroughCaves();
-}
-console.log('\ntotal ms, average for 10000 runs: ', (performance.now() - startMS) / 10000);
+console.log('mapNodes:', caves);
+removeDeadendCavesAndConnectionsToThem(caves);
+console.log('useful caves:', caves);
+let paths = findAllPathsThroughCaves();
+console.log('total paths:', paths.length);
+console.log('\ntotal ms: ', performance.now() - startMS);
 function convertRawInputTextToCaveNodeObject(fileName) {
-    const rawText = (0, fs_1.readFileSync)(fileName, 'utf-8');
-    const textRows = rawText.replace(/\r\n/, '\n').split('\n'); // Regex to account for possbility of IDE being set to CRLF instead of LF end of lines
+    const rawText = fs_1.readFileSync(fileName, 'utf-8');
+    const textRows = rawText.replace(/\r\n/g, '\n').split('\n'); // Regex to account for possbility of IDE being set to CRLF instead of LF end of lines
     let mapNodes = {};
     for (let row of textRows) {
         let nodes = row.split('-');
@@ -75,14 +69,14 @@ function removeDeadendCavesAndConnectionsToThem(caves) {
     });
 }
 function defineStartingPaths() {
-    let startingPaths = [[]];
+    let startingPaths = [];
     caves.start.forEach((cave, i) => {
         startingPaths[i] = ['start', cave];
     });
     return startingPaths;
 }
 function findAllPathsThroughCaves() {
-    let finishedPaths = [[]];
+    let finishedPaths = [];
     let ongoingPaths = defineStartingPaths();
     while (ongoingPaths.length > 0) {
         ongoingPaths.forEach((path, pathIndex) => {
@@ -101,7 +95,7 @@ function findAllPathsThroughCaves() {
             });
             ongoingPaths.splice(pathIndex, 1);
         });
-        // console.log('\nFinished paths:', finishedPaths);
+        console.log('\nFinished paths:', finishedPaths);
     }
     return finishedPaths;
 }

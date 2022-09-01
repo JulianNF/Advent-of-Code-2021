@@ -4,32 +4,28 @@ const startMS = performance.now();
 // ------------------------------------------------------------ //
 const fs_1 = require("fs");
 // ------------------------------------------------------------ //
-// let caves = convertRawInputTextToArrayOfCaves('day12/day12 input.txt');
-// console.log('mapNodes:', caves);
-// removeDeadendCavesAndConnectionsToThem(caves);
-// console.log('useful caves:', caves);
-// let paths = findAllPathsThroughCaves();
-// console.log('total paths:', paths.length - 1);
-// console.log('\ntotal ms: ', performance.now() - startMS);
 let caves = convertRawInputTextToArrayOfCaves('day12/day12 input.txt');
-for (let i = 0; i < 10000; i++) {
-    removeDeadendCavesAndConnectionsToThem(caves);
-    let paths = findAllPathsThroughCaves();
-}
-console.log('\ntotal ms, average for 10000 runs: ', (performance.now() - startMS) / 10000);
+console.log('mapNodes:', caves);
+removeDeadendCavesAndConnectionsToThem(caves);
+console.log('useful caves:', caves);
+let paths = findAllPathsThroughCaves();
+console.log('total paths:', paths.length);
+console.log('\ntotal ms: ', performance.now() - startMS);
 function convertRawInputTextToArrayOfCaves(fileName) {
-    const rawText = (0, fs_1.readFileSync)(fileName, 'utf-8');
-    const textRows = rawText.replace(/\r\n/, '\n').split('\n'); // Regex to account for possbility of IDE being set to CRLF instead of LF end of lines
+    const rawText = fs_1.readFileSync(fileName, 'utf-8');
+    const textRows = rawText.replace(/\r\n/g, '\n').split('\n'); // Regex to account for possbility of IDE being set to CRLF instead of LF end of lines
     let caves = [];
     for (let row of textRows) {
-        let caveNames = row.split('-');
-        let nameOfFirstCave = caveNames[0];
-        let nameOfSecondCave = caveNames[1];
+        let [nameOfFirstCave, nameOfSecondCave] = row.split('-');
+        // let caveNames = row.split('-');
+        // let nameOfFirstCave = caveNames[0];
+        // let nameOfSecondCave = caveNames[1];
+        // TODO - Refactor this "cave init" into a function, and call it twice, inverting the order of the two caves on the second call
         let firstCaveAlreadyRecorded = caves.find((cave) => cave.name == nameOfFirstCave);
         if (!firstCaveAlreadyRecorded) {
             let newCave = {
                 name: nameOfFirstCave,
-                isSmallCave: isSmallCave(nameOfFirstCave),
+                isSmall: isSmallCave(nameOfFirstCave),
                 connections: [nameOfSecondCave],
             };
             caves.push(newCave);
@@ -41,7 +37,7 @@ function convertRawInputTextToArrayOfCaves(fileName) {
         if (!secondCaveAlreadyRecorded) {
             let newCave = {
                 name: nameOfSecondCave,
-                isSmallCave: isSmallCave(nameOfSecondCave),
+                isSmall: isSmallCave(nameOfSecondCave),
                 connections: [nameOfFirstCave],
             };
             caves.push(newCave);
@@ -67,7 +63,7 @@ function removeAllConnectionsToCave(caveToRemove, caves) {
     });
 }
 function isDeadendCave(cave) {
-    if (!cave.isSmallCave)
+    if (!cave.isSmall)
         return false;
     if (cave.name == 'start')
         return false;
@@ -76,8 +72,10 @@ function isDeadendCave(cave) {
     if (cave.connections.length > 1)
         return false;
     let onlyConnection = caves.find((obj) => obj.name == cave.connections[0]);
-    if (!onlyConnection.isSmallCave)
-        return false;
+    if (onlyConnection !== undefined) {
+        if (!onlyConnection.isSmall)
+            return false;
+    }
     return true;
 }
 function removeDeadendCavesAndConnectionsToThem(caves) {
@@ -90,34 +88,40 @@ function removeDeadendCavesAndConnectionsToThem(caves) {
     }
 }
 function defineStartingPaths() {
-    let startingPaths = [[]];
+    let startingPaths = [];
     let startingCave = caves.find((cave) => cave.name == 'start');
-    startingCave.connections.forEach((connection, i) => {
-        startingPaths[i] = ['start', connection];
-    });
+    if (startingCave !== undefined) {
+        startingCave.connections.forEach((connection, i) => {
+            startingPaths[i] = ['start', connection];
+        });
+    }
     return startingPaths;
 }
 function findAllPathsThroughCaves() {
-    let finishedPaths = [[]];
+    let finishedPaths = [];
     let ongoingPaths = defineStartingPaths();
     while (ongoingPaths.length > 0) {
         ongoingPaths.forEach((path, pathIndex) => {
             let currentCave = caves.find((cave) => cave.name == path[path.length - 1]);
-            currentCave.connections.forEach((connectedCaveName) => {
-                let connectedCave = caves.find((cave) => cave.name == connectedCaveName);
-                if (connectedCave.isSmallCave && path.indexOf(connectedCave.name) > -1) {
-                    return;
-                }
-                else if (connectedCave.name == 'end') {
-                    finishedPaths.push([...path, connectedCave.name]);
-                }
-                else {
-                    ongoingPaths.push([...path, connectedCave.name]);
-                }
-            });
+            if (currentCave !== undefined) {
+                currentCave.connections.forEach((connectedCaveName) => {
+                    let connectedCave = caves.find((cave) => cave.name == connectedCaveName);
+                    if (connectedCave !== undefined) {
+                        if (connectedCave.isSmall && path.indexOf(connectedCave.name) > -1) {
+                            return;
+                        }
+                        else if (connectedCave.name == 'end') {
+                            finishedPaths.push([...path, connectedCave.name]);
+                        }
+                        else {
+                            ongoingPaths.push([...path, connectedCave.name]);
+                        }
+                    }
+                });
+            }
             ongoingPaths.splice(pathIndex, 1);
         });
-        // console.log('\nFinished paths:', finishedPaths);
+        console.log('\nFinished paths:', finishedPaths);
     }
     return finishedPaths;
 }
