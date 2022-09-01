@@ -52,6 +52,7 @@ function getUncorruptedLinesIn(lines) {
     return uncorruptedLines;
 }
 function getMissingCharsOfIncompleteLine(line) {
+    // Feedback: note that creating these three static variable arrays in the function means that they get created each time the function is called. Better to define them in global scope and use them that way
     const openings = ['[', '(', '{', '<'];
     const closings = [']', ')', '}', '>'];
     let recordedOpeningChars = [];
@@ -63,6 +64,7 @@ function getMissingCharsOfIncompleteLine(line) {
     return missingChars;
 }
 function calculateStringCompletionScoreForIncompleteLine(incompleteLine) {
+    // Feedback: Like above, note that creating this static variable array in the function means that it gets created each time the function is called. Better to define it in global scope
     const points = {
         ')': 1,
         ']': 2,

@@ -23,6 +23,7 @@ function convertRawInputTextToLineArrays(fileName) {
     return lineArray;
 }
 function getSyntaxErrorPointsForLine(line) {
+    // Feedback: note that creating these three static variable arrays in the function means that they get created each time the function is called. Better to define them in global scope and use them that way
     const openings = ['(', '[', '{', '<'];
     const closings = [')', ']', '}', '>'];
     const points = [3, 57, 1197, 25137];
