@@ -14,15 +14,15 @@ console.log('insertionRUlessss:', insertionRules);
 // console.log(findQuantityDifferenceBetweenLeastAndMostCommonElementsInPolymer(resultingPolymer));
 console.log('\ntotal ms: ', performance.now() - startMS);
 function convertRawInputTextToTemplateAndInsertionRules(fileName) {
-    const rawText = (0, fs_1.readFileSync)(fileName, 'utf-8');
+    const rawText = fs_1.readFileSync(fileName, 'utf-8');
     const textRows = rawText.replace(/\r\n/g, '\n').split('\n'); // Regex to account for possbility of IDE being set to CRLF instead of LF end of lines
     polymerTemplate = textRows[0];
     for (let i = 2; i < textRows.length; i++) {
         let initialPair = textRows[i][0] + textRows[i][1];
         // let result = textRows[i][0] + textRows[i][6] + textRows[i][1];
         let newRule = {
-            x1Insertions: textRows[i][6],
-            x5Insertions: undefined,
+            oneInsertion: textRows[i][0] + textRows[i][6] + textRows[i][1],
+            fiveInsertions: undefined,
         };
         insertionRules[initialPair] = newRule;
     }
