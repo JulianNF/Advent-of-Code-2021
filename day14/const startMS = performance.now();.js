@@ -22,8 +22,10 @@ function convertInputTextToTemplateAndInsertionRules(fileName) {
         let initialPair = textRows[i][0] + textRows[i][1];
         let result = textRows[i][0] + textRows[i][6] + textRows[i][1];
         let newRule = {
+            polymer: initialPair,
             rootPair: initialPair,
-            result: result,
+            results: [result],
+            longestResult: 3,
         };
         insertionRules[initialPair] = newRule;
     }
@@ -31,29 +33,33 @@ function convertInputTextToTemplateAndInsertionRules(fileName) {
 function extendInitialRuleSet(loops) {
     for (let i = 1; i <= loops; i++) {
         for (let rule in insertionRules) {
-            let newPolymer = insertElementsIntoPolymer(rule);
-            addPolymerInsertionRule(newPolymer);
+            addPolymerToInsertionRules(insertionRules[rule].results[0], insertionRules[rule].rootPair);
         }
     }
 }
-function addPolymerInsertionRule(newPolymer) {
+function addPolymerToInsertionRules(newPolymer, rootPair) {
+    console.log('newpolymer to add to rules:', newPolymer);
+    console.log("newpolymer's rootpair:", rootPair);
+    for (let rule in insertionRules) {
+        if (insertionRules[rule].rootPair == rootPair) {
+            // hmmm, will I want to do a sort, to keep biggest at front? will I want to do an indexOf check before adding to array? the longestResult value will help me hit any index I want, up to the last one, based on which result 'depth' I need at any given time
+            insertionRules[rule].results.push(newPolymer);
+            insertionRules[rule].longestResult = newPolymer.length;
+        }
+        console.log('existing rule now:', insertionRules[rule]);
+    }
     let newRule = {
-        rootPair: newPolymer[0] + newPolymer[newPolymer.length - 1],
-        result: insertElementsIntoPolymer(newPolymer),
+        polymer: newPolymer,
+        rootPair: rootPair,
+        results: [],
+        longestResult: 0,
     };
     insertionRules[newPolymer] = newRule;
 }
 // IDEA! We can ignore the first and last elements of a polymer resulting from a starting pair, because those are the starting pair
 function insertElementsIntoPolymer(startPolymer) {
-    let newPolymer = '';
-    console.log('start polymer is:', startPolymer);
-    for (let i = 0; i < startPolymer.length - 1; i++) {
-        let polymerA = startPolymer[i];
-        let polymerB = startPolymer[i + 1];
-        console.log('\tpolymerA:', polymerA, 'and polymerB:', polymerB);
-        newPolymer += polymerA + insertionRules[polymerA + polymerB];
-    }
-    newPolymer += startPolymer[startPolymer.length - 1];
+    let newPolymer = insertionRules[startPolymer].results[insertionRules[startPolymer].longestResult - 3];
+    addPolymerToInsertionRules(newPolymer, insertionRules[startPolymer].rootPair);
     return newPolymer;
 }
 function repeatedlyInsertPolymersIntoTemplate(startPolymer, numberOfRepetitions) {

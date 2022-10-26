@@ -7,7 +7,7 @@ import { readFileSync } from 'fs';
 
 let caves: cave[] = [];
 convertRawInputTextToCaves('day12/day12 input.txt');
-console.log('numberOfPossiblePaths:', countAllPossiblePathsThroughCaves();
+console.log('numberOfPossiblePaths:', countAllPossiblePathsThroughCaves());
 
 console.log('\ntotal ms: ', performance.now() - startMS);
 

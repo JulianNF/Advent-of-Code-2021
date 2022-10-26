@@ -1,5 +1,4 @@
 const startMS = performance.now();
-import { count } from 'console';
 // ------------------------------------------------------------ //
 
 import { readFileSync } from 'fs';
@@ -27,55 +26,55 @@ console.log('\ntotal ms: ', performance.now() - startMS);
 // ------------------------------------------------------------ //
 
 function convertRawInputTextToTemplateAndInsertionRules(fileName: string): void {
-	const rawText = readFileSync(fileName, 'utf-8');
-	const textRows = rawText.replace(/\r\n/g, '\n').split('\n'); // Regex to account for possbility of IDE being set to CRLF instead of LF end of lines
+    const rawText = readFileSync(fileName, 'utf-8');
+    const textRows = rawText.replace(/\r\n/g, '\n').split('\n'); // Regex to account for possbility of IDE being set to CRLF instead of LF end of lines
 
-	polymerTemplate = textRows[0];
+    polymerTemplate = textRows[0];
 
-	for (let i = 2; i < textRows.length; i++) {
-		let elementPair = textRows[i][0] + textRows[i][1];
-		let insertionElement = textRows[i][6];
-		insertionRules[elementPair] = insertionElement;
-	}
+    for (let i = 2; i < textRows.length; i++) {
+        let elementPair = textRows[i][0] + textRows[i][1];
+        let insertionElement = textRows[i][6];
+        insertionRules[elementPair] = insertionElement;
+    }
 }
 
 function insertElementsIntoPolymer(startPolymer: string, insertionRules: { [key: string]: string }): string {
-	let newPolymer: string = '';
+    let newPolymer: string = '';
 
-	for (let i = 0; i < startPolymer.length - 1; i++) {
-		let polymerA = startPolymer[i];
-		let polymerB = startPolymer[i + 1];
-		let currentPair = polymerA + polymerB;
-		newPolymer += polymerA + insertionRules[currentPair];
-	}
-	newPolymer += startPolymer[startPolymer.length - 1];
+    for (let i = 0; i < startPolymer.length - 1; i++) {
+        let polymerA = startPolymer[i];
+        let polymerB = startPolymer[i + 1];
+        let currentPair = polymerA + polymerB;
+        newPolymer += polymerA + insertionRules[currentPair];
+    }
+    newPolymer += startPolymer[startPolymer.length - 1];
 
-	return newPolymer;
+    return newPolymer;
 }
 
 function repeatedlyInsertPolymersIntoTemplate(startPolymer: string, insertionRules: { [key: string]: string }, numberOfRepetitions: number): string {
-	let polymer = startPolymer;
-	for (let i = 1; i <= numberOfRepetitions; i++) {
-		polymer = insertElementsIntoPolymer(polymer, insertionRules);
-	}
-	return polymer;
+    let polymer = startPolymer;
+    for (let i = 1; i <= numberOfRepetitions; i++) {
+        polymer = insertElementsIntoPolymer(polymer, insertionRules);
+    }
+    return polymer;
 }
 
 // TODO - what about doing that weird idea I had in bed about keeping track of insertions not only with +=1, but also by decreasing all other values -=1 if at most one of the inserted letters has a value of 0
 
 // TODO - be smart and create the initial array based on the letters in the startTemplate + insertions in original rules
 function findQuantityDifferenceBetweenLeastAndMostCommonElementsInPolymer(polymer: string): number {
-	let elementCounts: { [key: string]: number } = {};
+    let elementCounts: { [key: string]: number } = {};
 
-	for (let element of polymer) {
-		elementCounts[element] = (elementCounts[element] || 0) + 1;
-	}
+    for (let element of polymer) {
+        elementCounts[element] = (elementCounts[element] || 0) + 1;
+    }
 
-	let counts = Object.values(elementCounts);
-	let maxCount = Math.max(...counts);
-	let minCount = Math.min(...counts);
+    let counts = Object.values(elementCounts);
+    let maxCount = Math.max(...counts);
+    let minCount = Math.min(...counts);
 
-	return maxCount - minCount;
+    return maxCount - minCount;
 }
 
 console.log('==============================\n');

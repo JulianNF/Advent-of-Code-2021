@@ -8,11 +8,12 @@ import { readFileSync } from 'fs';
 
 let polymerTemplate: string = '';
 let insertionRules: insertionRules = {};
+let longestRule: number;
 convertInputTextToTemplateAndInsertionRules('day14/day14 input.txt');
 
-console.log('insertionRUles:', insertionRules);
+console.log('insertionRules:', insertionRules);
 
-generateAdditionalRules();
+extendInitialRuleSet(2);
 console.log('insertionRulessss:', insertionRules);
 
 // let resultingPolymer = repeatedlyInsertPolymersIntoTemplate(polymerTemplate, 10);
@@ -30,9 +31,13 @@ console.log('\ntotal ms: ', performance.now() - startMS);
 // ------------------------------------------------------------ //
 
 interface insertionRule {
-    oneInsertion: string;
-    fiveInsertions?: string;
+    rootPair: string;
+    result: string;
 }
+
+// build a huge set of rules, with long-ass names
+// when you do, add that valid result to ANY polymer with the same 'roots', and update its best result
+// then, based on the biggest/longest polymer number we have, I can search for the biggest rule matching the next set of string, a la rules[longestnextstringpossible]? -> gimme the "furthest along" answer we have for it - else, try rules[logestnextstringminusonelement] and so forth, until we're working with the biggest rule result we have
 
 interface insertionRules {
     [key: string]: insertionRule;
@@ -46,32 +51,45 @@ function convertInputTextToTemplateAndInsertionRules(fileName: string): void {
 
     for (let i = 2; i < textRows.length; i++) {
         let initialPair = textRows[i][0] + textRows[i][1];
-        // let result = textRows[i][0] + textRows[i][6] + textRows[i][1];
+        let result = textRows[i][0] + textRows[i][6] + textRows[i][1];
 
         let newRule: insertionRule = {
-            oneInsertion: textRows[i][0] + textRows[i][6] + textRows[i][1],
-            fiveInsertions: undefined,
+            rootPair: initialPair,
+            result: result,
         };
+
         insertionRules[initialPair] = newRule;
     }
 }
 
-function generate5xInsertionRules(): void {
-    for (let rule of Object.keys(insertionRules)) {
-        let result = repeatedlyInsertPolymersIntoTemplate(rule, 2);
-        console.log('new result:', result);
-        insertionRules[rule] = result;
+function extendInitialRuleSet(loops: number): void {
+    for (let i = 1; i <= loops; i++) {
+        for (let rule in insertionRules) {
+            let newPolymer = insertElementsIntoPolymer(rule);
+            addPolymerInsertionRule(newPolymer);
+        }
     }
 }
 
+function addPolymerInsertionRule(newPolymer: string): void {
+    let newRule: insertionRule = {
+        rootPair: newPolymer[0] + newPolymer[newPolymer.length - 1],
+        result: insertElementsIntoPolymer(newPolymer),
+    };
+    insertionRules[newPolymer] = newRule;
+}
+
+// IDEA! We can ignore the first and last elements of a polymer resulting from a starting pair, because those are the starting pair
+
 function insertElementsIntoPolymer(startPolymer: string): string {
     let newPolymer: string = '';
+    console.log('start polymer is:', startPolymer);
 
     for (let i = 0; i < startPolymer.length - 1; i++) {
         let polymerA = startPolymer[i];
         let polymerB = startPolymer[i + 1];
-        let currentPair = polymerA + polymerB;
-        newPolymer += polymerA + insertionRules[currentPair];
+        console.log('\tpolymerA:', polymerA, 'and polymerB:', polymerB);
+        newPolymer += polymerA + insertionRules[polymerA + polymerB];
     }
     newPolymer += startPolymer[startPolymer.length - 1];
 

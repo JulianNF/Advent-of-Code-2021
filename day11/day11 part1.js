@@ -8,7 +8,7 @@ const octoGrid = convertRawInputTextToLineArrays('day11/day11 input.txt');
 console.log('total flashes:', countFlashesAfterXSteps(100, octoGrid));
 console.log('\ntotal ms: ', performance.now() - startMS);
 function convertRawInputTextToLineArrays(fileName) {
-    const rawText = fs_1.readFileSync(fileName, 'utf-8');
+    const rawText = (0, fs_1.readFileSync)(fileName, 'utf-8');
     const textRows = rawText.replace(/\r\n/, '\n').split('\n'); // Regex to account for possbility of IDE being set to CRLF instead of LF end of lines
     let lineArray = [];
     for (let row of textRows) {

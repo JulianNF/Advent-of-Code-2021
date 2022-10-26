@@ -15,7 +15,7 @@ console.log('\ntotal ms, 1 run: ', performance.now() - startMS);
 // console.log('\ntotal ms, average for 10000 runs: ', (performance.now() - startMS) / 10000);
 // -------
 function convertRawInputTextToDepthMap(fileName) {
-    const rawText = fs_1.readFileSync(fileName, 'utf-8');
+    const rawText = (0, fs_1.readFileSync)(fileName, 'utf-8');
     const textRows = rawText.replace(/\r\n/g, '\n').split('\n'); // Regex to account for possbility of IDE being set to CRLF instead of LF end of lines
     // NB: With this approach, code runs in ~37ms/run, ~0.741 average/10000 runs:
     let depthMap = [];

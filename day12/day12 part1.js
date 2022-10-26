@@ -12,7 +12,7 @@ let paths = findAllPathsThroughCaves();
 console.log('total paths:', paths.length);
 console.log('\ntotal ms: ', performance.now() - startMS);
 function convertRawInputTextToCaveNodeObject(fileName) {
-    const rawText = fs_1.readFileSync(fileName, 'utf-8');
+    const rawText = (0, fs_1.readFileSync)(fileName, 'utf-8');
     const textRows = rawText.replace(/\r\n/g, '\n').split('\n'); // Regex to account for possbility of IDE being set to CRLF instead of LF end of lines
     let mapNodes = {};
     for (let row of textRows) {
