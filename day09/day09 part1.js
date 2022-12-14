@@ -4,7 +4,7 @@ const startMS = performance.now();
 // ------------------------------------------------------------ //
 const fs_1 = require("fs");
 function convertRawInputTextToDepthMap(fileName) {
-    const rawText = (0, fs_1.readFileSync)(fileName, 'utf-8');
+    const rawText = fs_1.readFileSync(fileName, 'utf-8');
     const textRows = rawText.split('\n');
     // NB: With this approach, code runs in ~37ms/run, ~0.741 average/10000 runs:
     let depthMap = [];

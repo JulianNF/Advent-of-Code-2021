@@ -4,7 +4,7 @@ const startMS = performance.now();
 // ------------------------------------------------------------ //
 const fs_1 = require("fs");
 // ------------------------------------------------------------ //
-const rawInput = (0, fs_1.readFileSync)('day15/day15 input.txt', 'utf-8');
+const rawInput = fs_1.readFileSync('day15/day15 input.txt', 'utf-8');
 const textRows = splitTextIntoRows(rawInput, '\n');
 let expandedTextRows = expandInputTextLeftAndDownNTimes(textRows, 5);
 console.log('rows expanded in', performance.now() - startMS, 'ms');

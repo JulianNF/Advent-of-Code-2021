@@ -1,11 +1,10 @@
 "use strict";
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const startMS = performance.now();
 // ------------------------------------------------------------ //
 const fs_1 = require("fs");
 // ------------------------------------------------------------ //
-const rawInput = (0, fs_1.readFileSync)('day15/day15 input.txt', 'utf-8');
+const rawInput = fs_1.readFileSync('day15/day15 input.txt', 'utf-8');
 const textRows = splitTextIntoRows(rawInput, '\n');
 let expandedTextRows = expandInputTextLeftAndDownNTimes(textRows, 5);
 console.log('rows expanded in', performance.now() - startMS, 'ms');
@@ -15,7 +14,7 @@ let riskGraph = generateStartingRiskGraph(expandedTextRows);
 console.log('initial risk graph generated in', performance.now() - startMS, 'ms');
 calculateLowestRiskToReachEachVertex(riskGraph);
 let exitVertexId = generateVertexId(graphWidth - 1, graphHeight - 1);
-console.log('lowest risk to end: ', (_a = findVertexById(exitVertexId)) === null || _a === void 0 ? void 0 : _a.totalRisk);
+console.log('lowest risk to end: ', findVertexById(exitVertexId)?.totalRisk);
 console.log('visited', riskGraph.reduce((total, vertex) => (vertex.visited ? (total += 1) : total), 0), '/', riskGraph.length);
 console.log('\ntotal ms: ', performance.now() - startMS);
 function generateVertexId(x, y) {
